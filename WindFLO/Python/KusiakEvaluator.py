@@ -1,49 +1,79 @@
 import numpy as np
-import scipy
+import math
 import xml.etree.ElementTree as ET
 
 class WindScenario:
 
-    def __init__(self, xml):
+    def __init__(self,xml):
+        # use xml library load parameters from xml document
+        root = ET.parse(xml).getroot()
         scenario = {'c':[],
                 'k':[],
                 'omega':[],
                 'theta':[],
                 'obstacle': []}
-        root = ET.parse(xml).getroot()
-        for child in root.getchildren():
+        for child in root:
             if child.tag == 'Angles':
-                for angle in child.getchildren():
+                for angle in child:
                     for param in angle.items():
                         scenario[param[0]].append(eval(param[1]))
             if child.tag == 'Obstacles':
-                for obstacle in child.getchildren():
+                for obstacle in child:
                     obsdict = {}
                     for param in obstacle.items():
                         obsdict[param[0]]=eval(param[1])
                     scenario['obstacle'].append(obsdict)
             if child.tag == 'Parameters':
-                for param in child.getchildren():
+                for param in child:
                     scenario[param.tag] = eval(param.text)
+        
+        # senario wind parameter           
         self.cs = np.array(scenario['c'])
         self.ks = np.array(scenario['k'])
         self.omegas = np.array(scenario['omega'])
         thetas = np.array(scenario['theta'])
         self.thetas = np.vstack((thetas, thetas+15)).T
+
+        # senario farm parameter
         self.obstacles = scenario['obstacle']
         self.width = scenario['Width']
         self.height = scenario['Height']
         self.nturbines = scenario['NTurbines']
-        self.energy = scenario['WakeFreeEnergy']
-        self.CT=0.8;
-        self.PRated=1500.0;
-        self.R=38.5;
-        self.eta=-500.0;
-        self.k=0.0750;
-        self.slambda=140.86;
-        self.vCin=3.5;
-        self.vCout=20;
-        self.vRated=14;
+        self.wakeFreeEnergy = scenario['WakeFreeEnergy']
+
+        # senario default parameters
+        self.CT=0.8
+        self.PRated=1500.0
+        self.R=38.5
+        self.eta=-500.0
+        self.k=0.0750
+        self.slambda=140.86
+        self.vCin=3.5
+        self.vCout=20
+        self.vRated=14
+
+        # optimization parametrs
+        self._dcos = []
+        self._esin = []
+        self.rkRatio = self.R/self.k
+        self.krRatio = self.k/self.R
+        self.vints = []
+        self.atan_k = math.atan(self.k)
+        self.trans_CT = 0
+        self.minDist = 0
+
+        self.initOptimizationparameters()
+
+    def initOptimizationparameters(self):
+        # set dcos, esin, v1large, v2large, Plarge
+        fac = np.pi/180
+        self.nturb = self.nturbines
+        self.ntheta = np.size(self.thetas)
+        self._dcos = [ np.cos(t.mean()*fac)  for t in self.thetas]
+        self._esin = [ np.sin(t.mean()*fac)  for t in self.thetas]
+        self.vints = np.arange(3.5, self.vRated+0.5, 0.5)
+        self.trans_CT = 1 - np.sqrt(1 - self.CT)
+        self.minDist = 64*self.R*self.R
 
 class WindFarmLayoutEvaluator:
 
