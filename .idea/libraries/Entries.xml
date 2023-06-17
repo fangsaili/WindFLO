@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Entries">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/WindFLO/Wind Competition/2015/Entries/CMA-ES.zip!/" />
+      <root url="jar://$PROJECT_DIR$/WindFLO/Wind Competition/2015/Entries/SSHH.zip!/" />
+      <root url="jar://$PROJECT_DIR$/WindFLO/Wind Competition/2015/Entries/GM.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

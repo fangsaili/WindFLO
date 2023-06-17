@@ -26,6 +26,7 @@ public class WindScenario {
 	public double vCin;
 	public double vCout;
 	public double vRated;
+	
 	public double width;
 	public double height;
 	public int nturbines;
@@ -114,11 +115,11 @@ public class WindScenario {
         }
         rkRatio=R/k;
         krRatio=k/R;
-        vints=new double[(int)(2.0*vRated-7.0+1.0)];
+        vints=new double[(int)(2.0*vRated-7.0+1.0)];//3.5 4 4.5 5 ... 14
         for (int i=0; i<vints.length; i++) {
           vints[i]=3.5+(double)i*0.5;
         }
-        atan_k=Math.atan(k);
+        atan_k=Math.atan(k);  
         trans_CT=1.0-Math.sqrt(1.0-CT);
         minDist=64.0*R*R;
     }

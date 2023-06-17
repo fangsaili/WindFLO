@@ -25,6 +25,13 @@ public class GA {
 
     private void evaluate() {
         double minfit = Double.MAX_VALUE;
+        long startTime = System.currentTimeMillis(); //获取开始时间
+ 
+
+ 
+
+ 
+
         for (int p=0; p<num_pop; p++) {
             int nturbines=0;
             for (int i=0; i<grid.size(); i++) {
@@ -55,6 +62,8 @@ public class GA {
             if (fits[p] < minfit) {
                 minfit = fits[p];
             }
+        long endTime = System.currentTimeMillis(); //获取结束时间
+        System.out.println("程序运行时间：" + (endTime - startTime) + "ms"); //输出程序运行时间
 	    System.out.println(wfle.getNumberOfEvaluation() + "\t" + fits[p] + "\t" + main_offline.nSc);
         }
     }
