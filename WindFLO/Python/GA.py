@@ -6,7 +6,7 @@ import numpy as np
 from time import time
 
 
-from plotGragh import plotg,savedata,savedatas
+# from plotGragh import plotg,savedata,savedatas
 
 np.random.seed(520)
 
@@ -14,11 +14,13 @@ num_pop = 20       # populations
 tour_size = 4      # tournament size
 mut_rate = 0.05   # mutation rate
 cross_rate = 0.40 # crossover rate - uniform crossover
-max_evals = 2000
+max_evals = 100
 
-all_fit = []
+# all_fit = []
 
 def run_ga(wind_scenario,java_evaluator):
+    all_fit = []
+
     xs = np.arange(0, wind_scenario.width, 8.001*wind_scenario.R)
     ys = np.arange(0, wind_scenario.height, 8.001*wind_scenario.R)
     x = np.tile(xs,(np.size(ys),1)).reshape(np.size(xs)*np.size(ys))
@@ -120,37 +122,37 @@ def run_ga(wind_scenario,java_evaluator):
 
 
 
-if __name__=='__main__':
-    import os
-    import jpype  # use jpype library python calling java function
+# if __name__=='__main__':
+#     import os
+#     import jpype  # use jpype library python calling java function
 
-    save_path = 'data/ga'
-    # set jdk location
-    os.environ['JAVA_HOME'] = '/Library/Java/JavaVirtualMachines/jdk-20.0.1.jdk/'
+#     save_path = 'data/ga'
+#     # set jdk location
+#     os.environ['JAVA_HOME'] = '/Library/Java/JavaVirtualMachines/jdk-20.0.1.jdk/'
 
-    # call java jar document
-    # jarpath=r'/Users/lifangsai/Desktop/postgraduation/project/WindFLO-code2/Javanew/out/artifacts/Evaluate/Javanew.jar'
-    jarpath=r'../Java/Javanew.jar'
+#     # call java jar document
+#     # jarpath=r'/Users/lifangsai/Desktop/postgraduation/project/WindFLO-code2/Javanew/out/artifacts/Evaluate/Javanew.jar'
+#     jarpath=r'../Java/Javanew.jar'
 
 
-    # run jar file use JVM
-    jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s" %jarpath)
+#     # run jar file use JVM
+#     jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s" %jarpath)
 
-    # get need class from java
-    evaluator =jpype.JClass('KusiakLayoutEvaluator')
-    java_evaluator = evaluator() # instance
+#     # get need class from java
+#     evaluator =jpype.JClass('KusiakLayoutEvaluator')
+#     java_evaluator = evaluator() # instance
 
-    for i in range(0,5):
-        path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind Competition/2015/Scenarios/%s.xml'%i
-        ws = WindScenario(path)
-        java_evaluator.initialize(path) # if use parameters should use JArray((JArray)(JDouble))(layout) to transform type 
-        (best_layout,all_fit) = run_ga(ws,java_evaluator)
+#     for i in range(0,5):
+#         path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind Competition/2015/Scenarios/%s.xml'%i
+#         ws = WindScenario(path)
+#         java_evaluator.initialize(path) # if use parameters should use JArray((JArray)(JDouble))(layout) to transform type 
+#         (best_layout,all_fit) = run_ga(ws,java_evaluator)
         
-        savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
-        savedata(save_path+"/all_fits%s.csv"%i,all_fit)
+#         savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
+#         savedata(save_path+"/all_fits%s.csv"%i,all_fit)
 
 
-        all_fit = []
+#         all_fit = []
 
         
 
