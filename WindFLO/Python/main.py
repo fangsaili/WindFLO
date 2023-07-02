@@ -1,6 +1,7 @@
 # import algorithms
 from GA import run_ga
 from SA import *
+from newAL import *
 
 # import environment
 import numpy as np
@@ -14,7 +15,7 @@ from plotGragh import plotg,savedata,savedatas
 
 if __name__=='__main__':
     
-    model = 'SA'
+    model = 'newAL'
 
 
     # set jdk location
@@ -32,7 +33,7 @@ if __name__=='__main__':
     java_evaluator = evaluator() # instance
 
 
-    for i in range(1,2):
+    for i in range(4,5):
         path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind Competition/2015/Scenarios/%s.xml'%i
         senario_path = '../Wind Competition/2015/Scenarios/%s.xml'%i
 
@@ -57,6 +58,23 @@ if __name__=='__main__':
             save_path = 'test/GA'
             savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
             savedata(save_path+"/all_fits%s.csv"%i,all_fits)
+
+        if model == 'newAL':
+            ws = WindScenario(senario_path)
+            java_evaluator.initialize(senario_path)
+            initial_grid = generate_initial_grid(ws)
+            (best_layout,all_fits) = new_Al_angle(ws,initial_grid,java_evaluator)
+
+            save_path = 'data/newAL/angle'
+            savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits%s.csv"%i,all_fits)
+
+
+
+
+
+
+
 
     # for i in range(0,5):
     #     # path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind Competition/2015/Scenarios/%s.xml'%i
