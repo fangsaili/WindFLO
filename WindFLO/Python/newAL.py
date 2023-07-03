@@ -155,13 +155,13 @@ def new_Al_angle(scenrio,initial_grid,java_evaluator,xa=15,xs=1,ya=15,ys=1):
 
 
 
-senario_path = '../Wind Competition/2015/Scenarios/1.xml'
-ws = WindScenario(senario_path)
-grid = generate_initial_grid(ws)
+# senario_path = '../Wind Competition/2015/Scenarios/1.xml'
+# ws = WindScenario(senario_path)
+# grid = generate_initial_grid(ws)
 
-# plt.plot(grid[:,0],grid[:,1],'.')
-new = new_grid_angle(ws,grid,15,1,15,1)
-# # # print(new)
-plt.plot(new[:,0],new[:,1],'.')
+# # plt.plot(grid[:,0],grid[:,1],'.')
+# new = new_grid_angle(ws,grid,15,1,15,1)
+# # # # print(new)
+# plt.plot(new[:,0],new[:,1],'.')
 
-plt.show()
+# plt.show()

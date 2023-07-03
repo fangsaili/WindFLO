@@ -20,12 +20,14 @@ def plotg(grid,fits):
     print(min(fits))
 
 
-def plotsingle(model='newAL/angle'):
+
+
+def plotsingle(model='newAL/angle',save=''):
     load_path = 'data/%s/'%model
     save_path = 'data/%s/'%model
 
     # draw fitness graph
-    for  i in range(5):
+    for  i in range(1,2):
         all_fits = []
         with open(load_path+'all_fits%s.csv'%i) as f:
             temp = f.readline().split(',')
@@ -52,7 +54,7 @@ def plotsingle(model='newAL/angle'):
 
         # plt.show()
         print(min(all_fits))
-        plt.savefig(save_path+'fits_fig%s'%i)
+        plt.savefig(save_path+save+'fits_fig%s'%i)
         plt.close()
 
 def plot_mix(models=['ga','SA']):
@@ -133,10 +135,10 @@ def plot_mix_in_one(models=['ga','SA']):
     plt.close()
 
 
-def plot_layout(model='newAL/angle'):
+def plot_layout(model='newSA',save=''):
     load_path = 'data/%s/'%model
     save_path = 'data/%s/'%model
-    for  i in range(5):
+    for  i in range(0,5):
             
         layoutx = []
         layouty = []
@@ -149,14 +151,14 @@ def plot_layout(model='newAL/angle'):
         # plt.figure(figsize=1)
         plt.gca().set_aspect(1)
         plt.plot(layoutx,layouty,'.',scalex=1,scaley=1)
-        plt.savefig(save_path+'newAL_angle%s'%i)
+        plt.savefig(save_path+save+'newSA%s'%i)
         plt.close()
 
 
+plot_layout(model='newSA',save='005')
 
-
-plotsingle()
-# plot_mix()
+# plotsingle(model='newSA',save='005')
+# plot_mix(models=['ga','newSA'])
 # plot_mix_in_one()
 # plot_layout()
 

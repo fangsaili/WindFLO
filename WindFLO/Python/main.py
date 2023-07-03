@@ -2,7 +2,7 @@
 from GA import run_ga
 from SA import *
 from newAL import *
-
+from newSA import *
 # import environment
 import numpy as np
 from KusiakEvaluator import WindScenario
@@ -15,7 +15,7 @@ from plotGragh import plotg,savedata,savedatas
 
 if __name__=='__main__':
     
-    model = 'newAL'
+    model = 'newSA'
 
 
     # set jdk location
@@ -47,6 +47,18 @@ if __name__=='__main__':
             # plotg(best_layout,all_fits)
             
             save_path = 'data/SA'
+            savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits%s.csv"%i,all_fits)
+
+        if model == 'newSA':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_new_sa(grid,java_evaluator)
+            # plotg(best_layout,all_fits)
+            
+            save_path = 'data/newSA'
             savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
             savedata(save_path+"/all_fits%s.csv"%i,all_fits)
 
