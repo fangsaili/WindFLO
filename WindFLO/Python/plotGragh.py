@@ -22,40 +22,115 @@ def plotg(grid,fits):
 
 
 
-def plotsingle(model='newAL/angle',save=''):
-    load_path = 'data/%s/'%model
-    save_path = 'data/%s/'%model
+# def plotsingle(model='newAL/angle',save=''):
+#     load_path = 'data/%s/'%model
+#     save_path = 'data/%s/'%model
+
+#     # draw fitness graph
+#     for  i in range(1,2):
+#         all_fits = []
+#         with open(load_path+'all_fits%s.csv'%i) as f:
+#             temp = f.readline().split(',')
+#             all_fits = [float(t) for t in temp]
+#         # fits_index = range(len(all_fits))
+#         # fits = all_fits
+#         fits_index = []
+#         fits = []
+#         j = 0
+#         while j < len(all_fits):
+#             fits.append(min(all_fits[j:j+31]))
+#             fits_index.append(j+16)
+#             j+=31
+
+#         # print(all_fits)
+#         plt.figure(figsize=(32,8))
+#         # plt.plot(range(len(all_fits)),all_fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+#         plt.plot(fits_index,fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+
+#         plt.title('scenorio%s best fit:'%i+str(min(all_fits)))
+#         plt.xlabel('times')
+#         plt.ylabel('fitness')
+#         plt.legend()
+
+#         # plt.show()
+#         print(min(all_fits))
+#         plt.savefig(save_path+save+'fits_fig%s'%i)
+#         plt.close()
+
+# def plotsingle(model='',save=''):
+#     load_path = 'test_TA_standard2_fits_100000'
+#     save_path = 'test_TA_standard2_fits_100000'
+
+#     # draw fitness graph
+#     all_fits = []
+#     with open(load_path+'.csv') as f:
+#         temp = f.readline().split(',')
+#         # print(temp)
+#         all_fits = [float(t)  for t in temp if t != '']
+#     # fits_index = range(len(all_fits))
+#     # fits = all_fits
+#     fits_index = []
+#     fits = []
+#     j = 0
+#     while j < len(all_fits):
+#         fits.append(min(all_fits[j:j+100]))
+#         fits_index.append(j+51)
+#         j+=100
+
+#     # print(all_fits)
+#     plt.figure(figsize=(32,8))
+#     # plt.plot(range(len(all_fits)),all_fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+#     plt.plot(fits_index,fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+
+#     plt.title('scenorio1 best fit:'+str(min(all_fits)))
+#     plt.xlabel('times')
+#     plt.ylabel('fitness')
+#     plt.legend()
+
+#     # plt.show()
+#     print(min(all_fits))
+#     plt.savefig(save_path+save+'fits_fig')
+#     plt.close()
+
+def plotsingle(model='',save=''):
+    load_path = 'test_ga_fits_100000'
+    save_path = 'test_ga_fits_100000'
 
     # draw fitness graph
-    for  i in range(1,2):
-        all_fits = []
-        with open(load_path+'all_fits%s.csv'%i) as f:
-            temp = f.readline().split(',')
-            all_fits = [float(t) for t in temp]
-        # fits_index = range(len(all_fits))
-        # fits = all_fits
-        fits_index = []
-        fits = []
-        j = 0
-        while j < len(all_fits):
-            fits.append(min(all_fits[j:j+31]))
-            fits_index.append(j+16)
-            j+=31
+    all_fits = []
+    with open(load_path+'.csv') as f:
+        for l in f.readlines():
+            temp = l.split(',')
+            all_fits.extend([float(t)  for t in temp if t != ''])
+        # temp = f.readline().split(',')
+        # print(temp)
+        # all_fits = [float(t)  for t in temp if t != '']
+    # fits_index = range(len(all_fits))
+    # fits = all_fits
+    fits_index = []
+    fits = []
+    j = 0
+    while j < len(all_fits):
+        fits.append(min(all_fits[j:j+100]))
+        fits_index.append(j+51)
+        j+=100
 
-        # print(all_fits)
-        plt.figure(figsize=(32,8))
-        # plt.plot(range(len(all_fits)),all_fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
-        plt.plot(fits_index,fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+    # print(all_fits)
+    plt.figure(figsize=(32,8))
+    # plt.plot(range(len(all_fits)),all_fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+    plt.plot(fits_index,fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
 
-        plt.title('scenorio%s best fit:'%i+str(min(all_fits)))
-        plt.xlabel('times')
-        plt.ylabel('fitness')
-        plt.legend()
+    plt.title('scenorio1 best fit:'+str(min(all_fits)))
+    plt.xlabel('times')
+    plt.ylabel('fitness')
+    plt.legend()
 
-        # plt.show()
-        print(min(all_fits))
-        plt.savefig(save_path+save+'fits_fig%s'%i)
-        plt.close()
+    # plt.show()
+    print(min(all_fits))
+    plt.savefig(save_path+save+'fits_fig')
+    plt.close()
+
+# plotsingle()
 
 def plot_mix(models=['ga','SA']):
      # draw fitness graph
@@ -135,27 +210,46 @@ def plot_mix_in_one(models=['ga','SA']):
     plt.close()
 
 
-def plot_layout(model='newSA',save=''):
-    load_path = 'data/%s/'%model
-    save_path = 'data/%s/'%model
-    for  i in range(0,5):
+# def plot_layout(model='newSA',save=''):
+#     load_path = 'data/%s/'%model
+#     save_path = 'data/%s/'%model
+#     for  i in range(0,5):
             
-        layoutx = []
-        layouty = []
-        with open(load_path+'best_layout%s.csv'%i) as f:
-            for l in f.readlines():
+#         layoutx = []
+#         layouty = []
+#         with open(load_path+'best_layout%s.csv'%i) as f:
+#             for l in f.readlines():
                 
-                point = l.split(',')
-                layoutx.append(float(point[0]))
-                layouty.append(float(point[1]))
-        # plt.figure(figsize=1)
-        plt.gca().set_aspect(1)
-        plt.plot(layoutx,layouty,'.',scalex=1,scaley=1)
-        plt.savefig(save_path+save+'newSA%s'%i)
-        plt.close()
+#                 point = l.split(',')
+#                 layoutx.append(float(point[0]))
+#                 layouty.append(float(point[1]))
+#         # plt.figure(figsize=1)
+#         plt.gca().set_aspect(1)
+#         plt.plot(layoutx,layouty,'.',scalex=1,scaley=1)
+#         plt.savefig(save_path+save+'newSA%s'%i)
+#         plt.close()
 
+def plot_layout(model='',save=''):
+    load_path = 'test_TA_standard_right2_layout_100000'
+    save_path = 'test_TA_standard_right2_layout_100000'
+            
+    layoutx = []
+    layouty = []
+    with open(load_path+'.csv') as f:
+        for l in f.readlines():
+            
+            point = l.split(',')
+            layoutx.append(float(point[0]))
+            layouty.append(float(point[1]))
+    # plt.figure(figsize=1)
+    plt.gca().set_aspect(1)
+    plt.plot(layoutx,layouty,'.',scalex=1,scaley=1)
+    plt.savefig(save_path+save+'1')
+    plt.close()
 
-plot_layout(model='newSA',save='005')
+plot_layout()
+
+# plot_layout(model='newSA',save='005')
 
 # plotsingle(model='newSA',save='005')
 # plot_mix(models=['ga','newSA'])

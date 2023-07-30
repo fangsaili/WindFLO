@@ -3,6 +3,17 @@ from GA import run_ga
 from SA import *
 from newAL import *
 from newSA import *
+from TA_standard import *
+from TA_standard1 import *
+from TA_standard2 import *
+from TA_standard_right import *
+from TA_standard_right1 import *
+from TA_standard_right2 import *
+from TA_distance import run_ta_distance
+
+
+
+
 # import environment
 import numpy as np
 from KusiakEvaluator import WindScenario
@@ -15,7 +26,7 @@ from plotGragh import plotg,savedata,savedatas
 
 if __name__=='__main__':
     
-    model = 'newSA'
+    model = 'TA_standard_right2'
 
 
     # set jdk location
@@ -33,7 +44,7 @@ if __name__=='__main__':
     java_evaluator = evaluator() # instance
 
 
-    for i in range(4,5):
+    for i in range(1,2):
         path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind Competition/2015/Scenarios/%s.xml'%i
         senario_path = '../Wind Competition/2015/Scenarios/%s.xml'%i
 
@@ -55,19 +66,19 @@ if __name__=='__main__':
             java_evaluator.initialize(senario_path)
             ws = WindScenario(senario_path)
             grid = generate_grid(ws)
-            (best_layout,all_fits) = run_new_sa(grid,java_evaluator)
+            (best_layout,all_fits) = run_new_sa(grid,java_evaluator,n_final=100000)
             # plotg(best_layout,all_fits)
             
-            save_path = 'data/newSA'
-            savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
-            savedata(save_path+"/all_fits%s.csv"%i,all_fits)
+            save_path = 'data/newSA/SA1'
+            savedatas(save_path+"/best3_layout%s.csv"%i,best_layout)
+            savedata(save_path+"/all3_fits%s.csv"%i,all_fits)
 
 
         if model == 'GA':
             ws = WindScenario(senario_path)
             java_evaluator.initialize(senario_path) # if use parameters should use JArray((JArray)(JDouble))(layout) to transform type 
             (best_layout,all_fits) = run_ga(ws,java_evaluator)
-            save_path = 'test/GA'
+            save_path = 'data/ga/onehs'
             savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
             savedata(save_path+"/all_fits%s.csv"%i,all_fits)
 
@@ -81,6 +92,100 @@ if __name__=='__main__':
             savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
             savedata(save_path+"/all_fits%s.csv"%i,all_fits)
 
+
+        if model == 'TA_standard':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_ta_standard(grid,java_evaluator,n_final=100000,cycle_limit=1000)
+            # plotg(best_layout,all_fits)
+
+            save_path = 'data/TA_standard'
+            savedatas(save_path+"/best_layout1000_%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits1000_%s.csv"%i,all_fits)
+            plotg(best_layout,all_fits)
+
+        if model == 'TA_standard1':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_ta_standard1(grid,java_evaluator,n_final=100000,cycle_limit=1000)
+            # plotg(best_layout,all_fits)
+
+            save_path = 'data/TA_standard1'
+            savedatas(save_path+"/best_layout100000_%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits10000_%s.csv"%i,all_fits)
+            plotg(best_layout,all_fits)
+
+        if model == 'TA_standard2':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_ta_standard2(grid,java_evaluator,n_final=100000,cycle_limit=1000)
+            # plotg(best_layout,all_fits)
+
+            save_path = 'data/TA_standard2'
+            savedatas(save_path+"/best_layout100000_%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits10000_%s.csv"%i,all_fits)
+            plotg(best_layout,all_fits)
+
+        if model == 'TA_standard_right':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_ta_standard_right(grid,java_evaluator,n_final=100000,cycle_limit=1000)
+            # plotg(best_layout,all_fits)
+
+            save_path = 'data/TA_standard_right'
+            savedatas(save_path+"/best_layout100000_%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits100000_%s.csv"%i,all_fits)
+            plotg(best_layout,all_fits)
+
+        if model == 'TA_standard_right1':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_ta_standard_right1(grid,java_evaluator,n_final=100000,cycle_limit=1000)
+            # plotg(best_layout,all_fits)
+
+            save_path = 'data/TA_standard_right1'
+            savedatas(save_path+"/best_layout100000_%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits100000_%s.csv"%i,all_fits)
+            plotg(best_layout,all_fits)
+
+        if model == 'TA_standard_right2':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_ta_standard_right2(grid,java_evaluator,n_final=100000,cycle_limit=1000)
+            # plotg(best_layout,all_fits)
+
+            save_path = 'data/TA_standard_right2'
+            savedatas(save_path+"/best_layout100000_%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits100000_%s.csv"%i,all_fits)
+            plotg(best_layout,all_fits)
+
+        if model == 'TA_distance':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            x = len(np.arange(0, ws.width, 8.001*ws.R))
+            y = len(np.arange(0, ws.height, 8.001*ws.R))
+
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_ta_distance(grid,java_evaluator,n_final=100000,cycle_limit=1000,width=x,height=y)
+            # plotg(best_layout,all_fits)
+
+            save_path = 'data/TA_distance2'
+            savedatas(save_path+"/best_layout100000_%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits10000_%s.csv"%i,all_fits)
+            plotg(best_layout,all_fits)
 
 
 

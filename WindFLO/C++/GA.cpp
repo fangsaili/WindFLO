@@ -146,7 +146,7 @@ void GA::run() {
   evaluate();
 
   // GA
-  for (int i=0; i<(1000/num_pop); i++) {
+  for (int i=0; i<(2000/num_pop); i++) {
 
     // rank populations (tournament)
     int num_winners = num_pop/tour_size;

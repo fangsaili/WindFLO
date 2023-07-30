@@ -2,6 +2,7 @@ from jpype import JArray, JDouble
 import numpy as np
 from time import time
 
+import csv
 
 # sudocode
 # 1 Initialization of temperate T0 and initial guess x (0) ;
@@ -87,11 +88,8 @@ def move(pop,prob=0.04):
     
     # return pop
 
-    
 
-
-
-def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 0.00001,alpha = 0.99, n_final = 2000,prob=0.05):
+def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.005,t_final = 0.00001,alpha = 0.99994, n_final = 2000,prob=0.05):
 
     n = 0
     max_turbs = grid.shape[0]
@@ -143,6 +141,7 @@ def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 
         layout = grid[newpops[:] == 1,:]
         best_fits.append(java_evaluator.evaluate(JArray((JArray)(JDouble))(layout)))
 
+
         # cycle_pops.append(newpops)
         # cycle_fits.append(best_fits[-1])
 
@@ -162,6 +161,9 @@ def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 
         else:
             # best_pop = newpops
             if best_fits[-1] < best_fit:
+                with open('test_newSA_layout_100000.csv','w+') as f:
+                    a = csv.writer(f)
+                    a.writerows(layout)
                 best_pop = newpops
                 best_fit = best_fits[-1]
                 best_layout = layout
@@ -177,6 +179,11 @@ def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 
         #     cycle = 0
         #     cycle_fits = []
         #     cycle_pops = []
+
+        with open('test_newSA_fits_100000.csv','a+') as f:
+            f.write(str(best_fits[-1])+',')
+
+        t = t*alpha
         n += 1
         print(n,sum(newpops),t,best_fits[-1],best_fit,maybe)
 

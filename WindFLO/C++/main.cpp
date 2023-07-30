@@ -10,11 +10,16 @@
 #include "KusiakLayoutEvaluator.h"
 
 int main(int argc, const char * argv[]) {
-
+  time_t start,end;
+  double cost;
+  time(&start);
   WindScenario wsc(argv[1]);
   KusiakLayoutEvaluator wfle;
   wfle.initialize(wsc);
   GA ga(wfle);
   ga.run();
+  time(&end);
+  cost = difftime(end,start);
+  printf("%f",cost);
 }
 

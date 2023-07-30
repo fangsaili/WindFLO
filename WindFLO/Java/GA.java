@@ -25,7 +25,7 @@ public class GA {
 
     private void evaluate() {
         double minfit = Double.MAX_VALUE;
-        long startTime = System.currentTimeMillis(); //获取开始时间
+        // long startTime = System.currentTimeMillis(); //获取开始时间
  
 
  
@@ -62,9 +62,9 @@ public class GA {
             if (fits[p] < minfit) {
                 minfit = fits[p];
             }
-        long endTime = System.currentTimeMillis(); //获取结束时间
-        System.out.println("程序运行时间：" + (endTime - startTime) + "ms"); //输出程序运行时间
-	    System.out.println(wfle.getNumberOfEvaluation() + "\t" + fits[p] + "\t" + main_offline.nSc);
+        // long endTime = System.currentTimeMillis(); //获取结束时间
+        // System.out.println("程序运行时间：" + (endTime - startTime) + "ms"); //输出程序运行时间
+	    System.out.println(wfle.getNumberOfEvaluation() + "\t" + fits[p] + "\t" + layout.length);
         }
     }
 

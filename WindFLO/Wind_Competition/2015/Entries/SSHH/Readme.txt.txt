@@ -1,0 +1,1 @@
+The sequence-based selection hyper-heuristic solver is implemented in SSHH.java and Heuristic.java. The other supplementary files can be downloaded from: https://github.com/d9w/WindFLO.

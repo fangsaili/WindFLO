@@ -1,0 +1,4 @@
+This is the method developed by "Carlos Segura - CIMAT Team", which was the winner of the Second Edition of the Wind Farm Layout Optimization Competition.
+It is a Memetic Differential Evolution that uses a subrogated model. The details can be found in the paper XXX
+
+Usage: ./DE scenario seed maxEvaluations [popSize CR]

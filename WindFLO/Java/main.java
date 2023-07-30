@@ -2,6 +2,7 @@ public class main {
 
   public static void main(String argv[]) {
       try {
+        long startTime = System.currentTimeMillis(); //获取开始时间
 
 	//   String userToken = new String("USER TOKEN GOES HERE");
 	//   String runToken = null;
@@ -23,12 +24,16 @@ public class main {
 	//       // algorithm can also just use constructor
 	//   }
 
-          WindScenario ws = new WindScenario("./Scenarios/obs_00.xml");
+        //   WindScenario ws = new WindScenario("./Wind_Competiton/2015/Scenarios/1.xml");
+		  WindScenario ws = new WindScenario("/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind_Competition/2015/Scenarios/2.xml");
+
           KusiakLayoutEvaluator wfle = new KusiakLayoutEvaluator();
           wfle.initialize(ws);
           GA algorithm = new GA(wfle);
           algorithm.run(); // optional, name of method 'run' provided on submission
           // algorithm can also just use constructor
+		  long endTime = System.currentTimeMillis(); //获取结束时间
+        System.out.println("程序运行时间：" + (endTime - startTime) + "ms"); //输出程序运行时间
 
       } catch (Exception e) {
           e.printStackTrace();
