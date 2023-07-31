@@ -55,7 +55,7 @@ def move(pop):
         pop[point[0]],pop[no_point[0]] = pop[no_point[0]],pop[point[0]]
     # return pop
 
-def run_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 0.00001,alpha = 0.99, n_final = 2000):
+def run_sa_perturbation(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 0.00001,alpha = 0.99, n_final = 2000):
 
     n = 0
     max_turbs = grid.shape[0]
@@ -94,10 +94,15 @@ def run_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 0.00
         # newpops = best_pop.copy()
         newpops = best_pop.copy()
 
-        opposite = -best_pop + 1
-        # g_layout = np.array(gaussion_layout) 
-        mutate = np.random.rand(max_turbs) < 0.03
-        newpops[mutate] = opposite[mutate]
+        # opposite = -best_pop + 1
+        # # g_layout = np.array(gaussion_layout) 
+        # mutate = np.random.rand(max_turbs) < 0.03
+        # newpops[mutate] = opposite[mutate]
+        rand_num = np.random.randint(2)
+        if rand_num == 0:
+            move(newpops)
+        else:
+            reversal(newpops)
         best_pops.append(newpops)
 
 
@@ -135,7 +140,7 @@ def run_sa(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t_final = 0.00
 
         # gaussion_layout.append(newpops)
         cycle += 1
-        if cycle == 20:
+        if cycle == 2:
             b = min(cycle_fits)
             best_pop = cycle_pops[cycle_fits.index(b)]
             t = t*alpha

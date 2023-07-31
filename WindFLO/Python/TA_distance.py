@@ -51,8 +51,25 @@ def reversal(pop):
 
     # return pop
 
+def get_point(index,w,h):
+    return index%w,index//w
 
-def move(pop):
+def search_near_point(index,w,h,d):
+    x,y = get_point(index,w,h)
+    search_list = []
+    for i in range(-d,d):
+        search_list.append((x+d,y+i))
+        search_list.append((x-d,y+i+1))
+        search_list.append((x+i+1,y+d))
+        search_list.append((x+i,y-d))
+    final_list = []
+    for a,b in search_list:
+        if a < 0 or a >= w or b < 0 or b >= h:
+            continue
+        final_list.append(b*w+a)
+    return final_list
+
+def move_distance(pop,w,h):
     point = []
     no_point = []
     for index,p in enumerate(pop):
@@ -65,12 +82,25 @@ def move(pop):
     if len(point) == 0 or len(no_point) == 0:
         return None
     else:
-        pop[point[0]],pop[no_point[0]] = pop[no_point[0]],pop[point[0]]
+        for i in range(1,max(w,h)):
+            l = search_near_point(point[0],w,h,i)
+            if l == []:
+                break
+            has_point = []
+            for j in l:
+                if j in no_point:
+                    has_point.append(j)
+            if has_point == []:
+                continue
+            np.random.shuffle(has_point)
+            pop[point[0]],pop[has_point[0]] = pop[has_point[0]],pop[point[0]]
+            return 1
+    return None
     # return pop
 
 
 
-def run_ta_distance(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,alpha = 0.95, n_final = 100000,cycle_limit=1000,width=0,height=0):
+def run_ta_distance(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,alpha = 0.95, n_final = 1000,cycle_limit=10,width=1,height=1):
 
     n = 0
     max_turbs = grid.shape[0]
@@ -107,9 +137,12 @@ def run_ta_distance(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,alpha =
 
         rand_num = np.random.randint(2)
         if rand_num == 0:
-            move(newpops)
+            if move_distance(newpops,width,height) == None:
+                reversal(newpops)
         else:
             reversal(newpops)
+        # move_distance(newpops,width,height)
+        
 
         # generate layout 
         layout = grid[newpops[:] == 1,:]

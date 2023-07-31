@@ -1,6 +1,7 @@
 # import algorithms
 from GA import run_ga
 from SA import *
+from SA_perturbation import run_sa_perturbation
 from newAL import *
 from newSA import *
 from TA_standard import *
@@ -26,7 +27,7 @@ from plotGragh import plotg,savedata,savedatas
 
 if __name__=='__main__':
     
-    model = 'TA_standard_right2'
+    model = 'TA_distance'
 
 
     # set jdk location
@@ -45,8 +46,8 @@ if __name__=='__main__':
 
 
     for i in range(1,2):
-        path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind Competition/2015/Scenarios/%s.xml'%i
-        senario_path = '../Wind Competition/2015/Scenarios/%s.xml'%i
+        path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind_Competition/2015/Scenarios/%s.xml'%i
+        senario_path = '../Wind_Competition/2015/Scenarios/%s.xml'%i
 
 
         if model == 'SA':
@@ -60,6 +61,19 @@ if __name__=='__main__':
             save_path = 'data/SA'
             savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
             savedata(save_path+"/all_fits%s.csv"%i,all_fits)
+
+        if model == 'SA_perturbation':
+            print(i)
+            java_evaluator.initialize(senario_path)
+            ws = WindScenario(senario_path)
+            grid = generate_grid(ws)
+            (best_layout,all_fits) = run_sa_perturbation(grid,java_evaluator)
+            # plotg(best_layout,all_fits)
+            
+            save_path = 'data/SA_perturbation'
+            savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
+            savedata(save_path+"/all_fits%s.csv"%i,all_fits)
+
 
         if model == 'newSA':
             print(i)
@@ -179,10 +193,10 @@ if __name__=='__main__':
             y = len(np.arange(0, ws.height, 8.001*ws.R))
 
             grid = generate_grid(ws)
-            (best_layout,all_fits) = run_ta_distance(grid,java_evaluator,n_final=100000,cycle_limit=1000,width=x,height=y)
+            (best_layout,all_fits) = run_ta_distance(grid,java_evaluator,alpha=0.9,n_final=2000,cycle_limit=10,width=x,height=y)
             # plotg(best_layout,all_fits)
 
-            save_path = 'data/TA_distance2'
+            save_path = 'data/TA_distance'
             savedatas(save_path+"/best_layout100000_%s.csv"%i,best_layout)
             savedata(save_path+"/all_fits10000_%s.csv"%i,all_fits)
             plotg(best_layout,all_fits)
