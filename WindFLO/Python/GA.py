@@ -18,7 +18,10 @@ max_evals = 100000
 
 # all_fit = []
 
-def run_ga(wind_scenario,java_evaluator):
+def run_ga(wind_scenario,java_evaluator,save_fit_path,save_layout_path,max_evals):
+    with open(save_fit_path,'a+') as f:
+        a = csv.writer(f)
+        a.writerow(['index','fit','number of turbines','num_pop='+str(num_pop),'tour_size='+str(tour_size),'mut_rate='+str(mut_rate),'cross_rate='+str(cross_rate)])
     # text_fits = open('test_ga_fits_100000.csv','w+')
     # text_fits = csv.writer(a)
     # a  = open('test_ga_layout_100000.csv','w+')
@@ -99,6 +102,7 @@ def run_ga(wind_scenario,java_evaluator):
         # evaluate
         pops = children
         fits = np.ones(num_pop)
+        numbs = []
 
         for p in range(num_pop):
             bins = pops[:,p] == 1
@@ -108,6 +112,7 @@ def run_ga(wind_scenario,java_evaluator):
             # t = time()
             java_evaluator.evaluate(JArray((JArray)(JDouble))(layout))
             fits[p] = java_evaluator.getEnergyCost()
+            numbs.append(len(layout))
             all_fit.append(fits[p])
             # text_fits.write(str(fits[p]))
 
@@ -119,13 +124,16 @@ def run_ga(wind_scenario,java_evaluator):
 
                 best_fit = fits[p]
         
-        with open('test_ga_layout_100000.csv','w+') as f:
+        with open(save_fit_path,'a+') as f:
+            a = csv.writer(f)
+            for index,fit in enumerate(fits):
+                a.writerow([20*(i-1)+index,fit,numbs[index]])
+
+        with open(save_layout_path,'w+') as f:
             text_layout = csv.writer(f)
             text_layout.writerows(best_layout)
 
-        with open('test_ga_fits_100000.csv','a+') as f:
-            a = csv.writer(f)
-            a.writerow(fits)
+        
         
 
         minfit = min(fits)
@@ -137,42 +145,4 @@ def run_ga(wind_scenario,java_evaluator):
     # plotg(best_layout,all_fit)
     # print('final minfit:',min(all_fit))
 
-
-# run_ga(wind_scenario,java_evaluator)
-
-
-
-# if __name__=='__main__':
-#     import os
-#     import jpype  # use jpype library python calling java function
-
-#     save_path = 'data/ga'
-#     # set jdk location
-#     os.environ['JAVA_HOME'] = '/Library/Java/JavaVirtualMachines/jdk-20.0.1.jdk/'
-
-#     # call java jar document
-#     # jarpath=r'/Users/lifangsai/Desktop/postgraduation/project/WindFLO-code2/Javanew/out/artifacts/Evaluate/Javanew.jar'
-#     jarpath=r'../Java/Javanew.jar'
-
-
-#     # run jar file use JVM
-#     jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s" %jarpath)
-
-#     # get need class from java
-#     evaluator =jpype.JClass('KusiakLayoutEvaluator')
-#     java_evaluator = evaluator() # instance
-
-#     for i in range(0,5):
-#         path = '/Users/lifangsai/Desktop/postgraduation/project/WindFLO/WindFLO/Wind Competition/2015/Scenarios/%s.xml'%i
-#         ws = WindScenario(path)
-#         java_evaluator.initialize(path) # if use parameters should use JArray((JArray)(JDouble))(layout) to transform type 
-#         (best_layout,all_fit) = run_ga(ws,java_evaluator)
-        
-#         savedatas(save_path+"/best_layout%s.csv"%i,best_layout)
-#         savedata(save_path+"/all_fits%s.csv"%i,all_fit)
-
-
-#         all_fit = []
-
-        
 

@@ -357,3 +357,5 @@
 8317.0395,6468.8085
 8625.078,6468.8085
 8933.1165,6468.8085
+index,fit,number of turbines,num_pop=20,tour_size=4,mut_rate=0.05,cross_rate=0.4
+index,fit,number of turbines,num_pop=20,tour_size=4,mut_rate=0.05,cross_rate=0.4

@@ -6,7 +6,7 @@ function ws=initialize(WindScenario)
 %% load the wind resource file
 
 try
-    docstruct = xml2struct(WindScenario);
+    docstruct = XML2Structure(WindScenario);
 catch
     error(['Error reading scenario ' WindScenario])
 end

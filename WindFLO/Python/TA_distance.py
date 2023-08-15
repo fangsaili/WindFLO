@@ -25,21 +25,21 @@ import csv
 # set randon seed
 np.random.seed(10086)
 
-def generate_grid(wind_scenario):
-    # initial max turbins grid
-    xs = np.arange(0, wind_scenario.width, 8.001*wind_scenario.R)
-    ys = np.arange(0, wind_scenario.height, 8.001*wind_scenario.R)
-    x = np.tile(xs,(np.size(ys),1)).reshape(np.size(xs)*np.size(ys))
-    y = np.tile(ys,(np.size(xs),1)).T.reshape(np.size(xs)*np.size(ys))
-    grid = np.array([x,y])
-    grid = grid.T
-    for obs in wind_scenario.obstacles:
-        bpositions = np.multiply(
-                grid <= [obs['xmax'], obs['ymax']],
-                grid >= [obs['xmin'], obs['ymin']])
-        bina = ~np.multiply(bpositions[:,0], bpositions[:,1])
-        grid = grid[bina,:]
-    return grid
+# def generate_grid(wind_scenario):
+#     # initial max turbins grid
+#     xs = np.arange(0, wind_scenario.width, 8.001*wind_scenario.R)
+#     ys = np.arange(0, wind_scenario.height, 8.001*wind_scenario.R)
+#     x = np.tile(xs,(np.size(ys),1)).reshape(np.size(xs)*np.size(ys))
+#     y = np.tile(ys,(np.size(xs),1)).T.reshape(np.size(xs)*np.size(ys))
+#     grid = np.array([x,y])
+#     grid = grid.T
+#     for obs in wind_scenario.obstacles:
+#         bpositions = np.multiply(
+#                 grid <= [obs['xmax'], obs['ymax']],
+#                 grid >= [obs['xmin'], obs['ymin']])
+#         bina = ~np.multiply(bpositions[:,0], bpositions[:,1])
+#         grid = grid[bina,:]
+#     return grid
 
 def reversal(pop):
     length = len(pop)
@@ -116,7 +116,7 @@ def run_ta_distance(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,alpha =
     # if best_pop is none, random generate layout and calculate fitness
     if type(best_pop) == type(None):
         best_pop = np.zeros(max_turbs)
-        bins = np.random.rand(max_turbs) > 0.5
+        bins = np.random.rand(max_turbs) > 0.01
         best_pop[:] = bins
         layout_best = grid[bins, :]
         best_pops.append(best_pop)

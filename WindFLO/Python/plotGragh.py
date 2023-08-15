@@ -230,9 +230,9 @@ def plot_mix_in_one(models=['ga','SA']):
 #         plt.close()
 
 def plot_layout(model='',save=''):
-    load_path = 'test_TA_standard_right2_layout_100000'
-    save_path = 'test_TA_standard_right2_layout_100000'
-            
+    load_path = 'data/SA_three/best_layout1'
+    save_path = 'data/SA_three/best_layout1'
+
     layoutx = []
     layouty = []
     with open(load_path+'.csv') as f:

@@ -75,7 +75,7 @@ def run_sa_perturbation(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.004,t
     # if best_pop is none, random generate layout and calculate fitness
     if type(best_pop) == type(None):
         best_pop = np.zeros(max_turbs)
-        bins = np.random.rand(max_turbs) > 0.5
+        bins = np.random.rand(max_turbs) > 0.01
         best_pop[:] = bins
         layout_best = grid[bins, :]
         best_pops.append(best_pop)

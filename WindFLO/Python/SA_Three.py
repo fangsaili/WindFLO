@@ -65,6 +65,25 @@ def delete(pop,prob=0.04):
             break
     # return pop
 
+def get_point(index,w,h):
+    return index%w,index//w
+
+def search_near_point(index,w,h,d):
+    x,y = get_point(index,w,h)
+    search_list = []
+    for i in range(-d,d):
+        search_list.append((x+d,y+i))
+        search_list.append((x-d,y+i+1))
+        search_list.append((x+i+1,y+d))
+        search_list.append((x+i,y-d))
+    final_list = []
+    for a,b in search_list:
+        if a < 0 or a >= w or b < 0 or b >= h:
+            continue
+        final_list.append(b*w+a)
+    print(final_list)
+    return final_list
+
 def move(pop,prob=0.04):
     point = []
     no_point = []
@@ -89,7 +108,7 @@ def move(pop,prob=0.04):
     # return pop
 
 
-def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t1=0.005,t2=0.005,t3=0.005,t_final = 0.00001,alpha = 0.99994, n_final = 2000,prob=0.05):
+def run_sa_three(grid,java_evaluator,best_pop=None,best_fit=1,t1=0.005,t2=0.005,t3=0.005,t_final = 0.00001,alpha = 0.99994, n_final = 2000,prob=0.05,width=1,height=1):
 
     n = 0
     max_turbs = grid.shape[0]
@@ -127,9 +146,11 @@ def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t1=0.005,t2=0.005,t3
             if initial_pop[i] > 0.5:
                 initial_pop[i] = 0
                 layout = grid[initial_pop[:] == 1,:]
+                if len(initial_pop) == 0:
+                    continue
                 best_fits.append(java_evaluator.evaluate(JArray((JArray)(JDouble))(layout)))
-
-                delta_f = best_fits[-1] - initial_fit
+                n+=1
+                delta_f = best_fits[-1] - best_fit
                 if delta_f > 0:
                     if np.random.rand(1) > np.exp(delta_f/t1):
                         initial_pop[i] = 1
@@ -142,75 +163,74 @@ def run_new_sa(grid,java_evaluator,best_pop=None,best_fit=1,t1=0.005,t2=0.005,t3
             print(n,sum(initial_pop),'T_remove',t1,best_fits[-1],best_fit)
         
         # Move
-        for 
-
-                    
-                
-
-
-
-                n+=1
+        move_index = []
+        for index,p in enumerate(initial_pop):
+            if p > 0.5:
+                move_index.append(index)
             
+        for index in move_index:
+            near_points = search_near_point(index,width,height,1)
+            if near_points == []:
+                continue
+            near_has_points = []
+            for point in near_points:
+                if point < 0 or point >= len(initial_pop):
+                    continue
+                if initial_pop[point] < 0.5:
+                    near_has_points.append(point)
+            if near_has_points == []:
+                continue
+            near_has_points_fits = []
+            initial_pop[index] = 0
+            for p in near_has_points:
+                # initial_pop[index] = 0
+                initial_pop[p] = 1
+                layout = grid[initial_pop[:] == 1,:]
+                best_fits.append(java_evaluator.evaluate(JArray((JArray)(JDouble))(layout)))
+                n+=1
+                near_has_points_fits.append(best_fits[-1])
+                initial_pop[p] = 0
+            initial_pop[index] = 1
+            best_choose = min(near_has_points_fits)
+            best_choose_index = near_has_points[near_has_points_fits.index(best_choose)]
+            delta_f = best_choose - best_fit
+            if delta_f > 0:
+                if np.random.rand(1) < np.exp(delta_f/t2):
+                    initial_pop[index] = 0
+                    initial_pop[best_choose_index] = 1
+                    initial_fit = best_choose
+            else:
+                initial_pop[index] = 0
+                initial_pop[best_choose_index] = 1
+                best_fit = best_choose
+                initial_fit = best_choose
+        
+            print(n,sum(initial_pop),'T_move',t2,best_choose,best_fit)
 
+        # add
+        max_length = len(initial_pop)
+        for i in range(max_length):
+            if initial_pop[i] < 0.5:
+                initial_pop[i] = 1
+                layout = grid[initial_pop[:] == 1,:]
+                best_fits.append(java_evaluator.evaluate(JArray((JArray)(JDouble))(layout)))
+                delta_f = best_fits[-1] - best_fit
+                if delta_f > 0:
+                    if np.random.rand(1) < np.exp(delta_f/t3):
+                        initial_fit = best_fits[-1]
+                    else:
+                        initial_pop[i] = 0
+                else:
+                    best_fit = best_fits[-1]
+                    initial_fit = best_fits[-1]
+                n += 1
+            print(n,sum(initial_pop),'T_add',t3,best_fits[-1],best_fit)
+        
+        t1 = alpha*t1
+        t2 = alpha*t2
+        t3 = alpha*t3
 
-
-        rand_num = np.random.randint(3)
-        if rand_num == 0:
-            move(newpops,prob)
-        elif rand_num == 1:
-            add(newpops,prob)
-        else:
-            delete(newpops,prob)
-
-        # generate layout 
-        layout = grid[newpops[:] == 1,:]
-        best_fits.append(java_evaluator.evaluate(JArray((JArray)(JDouble))(layout)))
-
-
-        # cycle_pops.append(newpops)
-        # cycle_fits.append(best_fits[-1])
-
-       # whether or not a change is accepted
-        # if best_fits[-1] > best_fit:
-        maybe = 1
-        # if best_fits[-1] > best_fits[-2]:
-        if best_fits[-1] > best_fit:
-
-            maybe = np.exp(-(best_fits[-1]-best_fit)/best_fit/t)
-            # maybe = np.exp(-(best_fits[-1]-best_fits[-2])/best_fits[-2]/t)
-
-            # print(maybe)
-            if maybe > np.random.rand():
-                best_pop = newpops
-                
-        else:
-            # best_pop = newpops
-            if best_fits[-1] < best_fit:
-                with open('test_newSA_layout_100000.csv','w+') as f:
-                    a = csv.writer(f)
-                    a.writerows(layout)
-                best_pop = newpops
-                best_fit = best_fits[-1]
-                best_layout = layout
-            # gaussion_layout.append(newpops)
-        # gaussion_layout.append(newpops)
-
-        # gaussion_layout.append(newpops)
-        # cycle += 1
-        # if cycle == 20:
-        #     b = min(cycle_fits)
-        #     best_pop = cycle_pops[cycle_fits.index(b)]
-        #     t = t*alpha
-        #     cycle = 0
-        #     cycle_fits = []
-        #     cycle_pops = []
-
-        with open('test_newSA_fits_100000.csv','a+') as f:
-            f.write(str(best_fits[-1])+',')
-
-        t = t*alpha
-        n += 1
-        print(n,sum(newpops),t,best_fits[-1],best_fit,maybe)
+    best_layout = grid[initial_pop[:] == 1,:]
 
     return best_layout,best_fits
 

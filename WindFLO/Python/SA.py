@@ -21,11 +21,11 @@ def generate_grid(wind_scenario):
         grid = grid[bina,:]
     return grid
 
-def gaussion_prob(data,x):
-    avg = np.average(data)
-    sigma = np.std(data)
-    res = 1/np.power(2*np.pi*sigma,0.5)*np.exp(-np.power(x-avg,2)/(2*np.power(sigma,2)))
-    return res
+# def gaussion_prob(data,x):
+#     avg = np.average(data)
+#     sigma = np.std(data)
+#     res = 1/np.power(2*np.pi*sigma,0.5)*np.exp(-np.power(x-avg,2)/(2*np.power(sigma,2)))
+#     return res
 
 
 def reversal(pop):

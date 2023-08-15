@@ -17,8 +17,10 @@ const int eval_limit = 2000;
 const int turbines_per_substation = 30;
 
 // Some magic numbers that control the precision of the hill climber
-const int angle_slice = 36;
-const int mag_slice = 16;
+// const int angle_slice = 36;
+const int angle_slice = 36*2;
+
+const int mag_slice = 16*2;
 const int mag_step = 4 * mag_slice;
 
 // Utility class designed to make 2d vector math easier
