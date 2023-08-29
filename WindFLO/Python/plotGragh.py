@@ -230,8 +230,8 @@ def plot_mix_in_one(models=['ga','SA']):
 #         plt.close()
 
 def plot_layout(model='',save=''):
-    load_path = 'data/SA_three/best_layout1'
-    save_path = 'data/SA_three/best_layout1'
+    load_path = 'data/SA_perturbation/100000/best_layout100000_0.00042'
+    save_path = 'data/SA_perturbation/100000/best_layout100000_t6'
 
     layoutx = []
     layouty = []
@@ -244,11 +244,111 @@ def plot_layout(model='',save=''):
     # plt.figure(figsize=1)
     plt.gca().set_aspect(1)
     plt.plot(layoutx,layouty,'.',scalex=1,scaley=1)
-    plt.savefig(save_path+save+'1')
+    plt.savefig(save_path)
     plt.close()
 
-plot_layout()
 
+def plot_new(model='',save=''):
+    load_path = 'data/SA_perturbation/100000/best_fits100000_0.04_0.99988_2'
+    save_path = 'data/SA_perturbation/100000/best_fits100000_t1_2'
+
+    # draw fitness graph
+    all_fits = []
+    with open(load_path+'.csv') as f:
+        for l in f.readlines()[1:]:
+            temp = l.split(',')
+            all_fits.append(float(temp[1]))
+        # temp = f.readline().split(',')
+        # print(temp)
+        # all_fits = [float(t)  for t in temp if t != '']
+    # fits_index = range(len(all_fits))
+    # fits = all_fits
+    fits_index = []
+    fits = []
+    j = 0
+    while j < len(all_fits):
+        fits.append(min(all_fits[j:j+100]))
+        fits_index.append(j+51)
+        j+=100
+
+    # print(all_fits)
+    plt.figure(figsize=(32,8))
+    # plt.plot(range(len(all_fits)),all_fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+    plt.plot(fits_index,fits,label='SA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+
+    plt.title('scenorio1 best fit:'+str(min(all_fits)))
+    plt.xlabel('times')
+    plt.ylabel('fitness')
+    plt.legend()
+
+    # plt.show()
+    print(min(all_fits))
+    plt.savefig(save_path+save+'fits_fig')
+    plt.close()
+
+def plot_new_mix(model='',save=''):
+    load_path1 = 'data/SA_perturbation/100000/best_fits100000_0.04_0.99988_1'
+    load_path2 = 'data/SA_perturbation/100000/best_fits100000_1'
+    load_path3 = 'data/SA_perturbation/100000/best_fits100000_0.0004_1'
+
+    save_path = 'data/SA_perturbation/100000/best_fits100000_mix_three_t'
+
+
+
+    # draw fitness graph
+    all_fits = []
+    fits1 = []
+    fits2 = []
+
+    fits3 = []
+
+    with open(load_path1+'.csv') as f:
+        for l in f.readlines()[1:]:
+            temp = l.split(',')
+            fits1.append(float(temp[1]))
+    
+    with open(load_path2+'.csv') as f:
+        for l in f.readlines()[1:]:
+            temp = l.split(',')
+            fits2.append(float(temp[1]))
+
+    with open(load_path3+'.csv') as f:
+        for l in f.readlines()[1:]:
+            temp = l.split(',')
+            fits3.append(float(temp[1]))
+
+    all_fits.append(fits1)
+    all_fits.append(fits2)
+    all_fits.append(fits3)
+
+    
+    plt.figure(figsize=(32,8)) 
+
+    for fit in all_fits:
+        fits_index = []
+        fits = []
+        j = 0
+        while j < len(fit):
+            fits.append(min(fit[j:j+100]))
+            fits_index.append(j+51)
+            j+=100
+        # print(1)
+        # print(all_fits)
+        # plt.figure(figsize=(32,8)) 
+        # plt.plot(range(len(all_fits)),all_fits,label='GA'+str(min(all_fits)),color='red',linestyle='-',marker='*',linewidth=0.5)
+        plt.plot(fits_index,fits,label='SA'+str(min(fit)),linestyle='-',linewidth=0.5)
+
+    plt.title('scenorio1 best fit:'+str(min(fit)))
+    plt.xlabel('times')
+    plt.ylabel('fitness')
+    plt.legend()
+
+    # plt.show()
+    # print(min(all_fits))
+    plt.savefig(save_path+save+'fits_fig')
+    plt.close()
+# plot_layout()
+plot_new_mix()
 # plot_layout(model='newSA',save='005')
 
 # plotsingle(model='newSA',save='005')

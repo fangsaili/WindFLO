@@ -41,13 +41,29 @@ def generate_grid(wind_scenario):
         grid = grid[bina,:]
     return grid
 
-def reversal(pop):
-    length = len(pop)
-    index = np.random.randint(length)
-    if pop[index] > 0.5:
-        pop[index] = 0
+def reversal(pop,add=True):
+    point = []
+    no_point = []
+    for index,p in enumerate(pop):
+        if p > 0.5:
+            point.append(index)
+        else:
+            no_point.append(index)
+
+    np.random.shuffle(point)
+    np.random.shuffle(no_point)
+    if add:
+        if len(no_point) == 0:
+            return None
+        else:
+            pop[no_point[0]] = 1
+            return 1
     else:
-        pop[index] = 1
+        if len(point) == 0:
+            return None
+        else:
+            pop[point[0]] = 0
+            return 1
 
     # return pop
 
@@ -70,8 +86,12 @@ def move(pop):
 
 
 
-def run_ta_standard_right(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,alpha = 0.95, n_final = 100000,cycle_limit=1000):
+def run_ta_standard_right(grid,java_evaluator,save_fit_path,save_layout_path,best_pop=None,best_fit=1,t = 0.1,t_percent=0.04,t_final = 0,alpha = 0.95, n_final = 100000,cycle_limit=1000):
 
+    with open(save_fit_path,'w+') as f:
+        a = csv.writer(f)
+        a.writerow(['index','fit','number of turbines','temparature='+str(t),'t_percent='+str(t_percent),'alpha='+str(alpha),'n='+str(n_final)])
+    
     n = 0
     max_turbs = grid.shape[0]
     best_pops = []
@@ -79,6 +99,7 @@ def run_ta_standard_right(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,a
     best_pop = best_pop
     best_fit = best_fit
     best_layout = None
+    no_change = 0
 
     # if best_pop is none, random generate layout and calculate fitness
     if type(best_pop) == type(None):
@@ -93,7 +114,7 @@ def run_ta_standard_right(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,a
         best_fits.append(best_fit)
         # gaussion_layout.append(best_pop)
 
-    t = best_fits[0]*0.01
+    t = best_fits[0]*t_percent
 
     cycle = 0
     # running 
@@ -102,37 +123,53 @@ def run_ta_standard_right(grid,java_evaluator,best_pop=None,best_fit=1,t = 0.1,a
         # newpops = best_pop.copy()
         newpops = best_pop.copy()
 
-        rand_num = np.random.randint(2)
-        if rand_num == 0:
-            move(newpops)
+        randchoose = np.random.randint(3)
+        if randchoose == 0:
+            if reversal(newpops,True) == None:
+                reversal(newpops,False)
+        elif randchoose == 1:
+            if reversal(newpops,False) == None:
+                reversal(newpops,True)
         else:
-            reversal(newpops)
+            move(newpops)
 
         # generate layout 
         layout = grid[newpops[:] == 1,:]
         best_fits.append(java_evaluator.evaluate(JArray((JArray)(JDouble))(layout)))
 
+        accept = False
         if best_fits[-1] < best_fits[-2] + t:
-            with open('test_TA_standard_right_layout_100000.csv','w+') as f:
-                a = csv.writer(f)
-                a.writerows(layout)
             
+            accept = True
             if best_fits[-1] < best_fit:
                 best_fit = best_fits[-1]
                 best_layout = layout
-
+                no_change = 0
+            else:
+                no_change += 1
             best_pop = newpops
+        
             
-           
-        with open('test_TA_standard_right_fits_100000.csv','a+') as f:
-            f.write(str(best_fits[-1])+',')
+        # save data
+        with open(save_fit_path,'a+') as f:
+            a = csv.writer(f)
+            a.writerow([n,best_fits[-1],len(layout),t,accept])
 
-        if cycle == cycle_limit:
+        with open(save_layout_path,'w+') as f:
+            text_layout = csv.writer(f)
+            text_layout.writerows(best_layout)
+
+        # if cycle == cycle_limit:
+        #     t = t*alpha
+        #     cycle = 0
+        # cycle += 1
+
+        if no_change == cycle_limit:
             t = t*alpha
-            cycle = 0
-        cycle += 1
+            no_change = 0
+        
         n += 1
-        print(n,cycle,sum(newpops),t,best_fits[-1],best_fit)
+        print(n,cycle,sum(newpops),t,best_fits[-1],best_fit,accept)
 
     return best_layout,best_fits
 
